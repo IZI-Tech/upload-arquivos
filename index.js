@@ -26,6 +26,10 @@ app.post('/upload', (req, res) => {
   res.sendStatus(200);
 })
 
+app.get('/live', function(req, res) {
+  res.send('hello world');
+});
+
 app.listen(port, () => {
   console.log(`Escutando uploads em http://localhost:${port}`)
 })
