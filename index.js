@@ -9,8 +9,9 @@ app.use(express.urlencoded({ extended: true }));
 app.post('/upload', (req, res) => {
   req.setEncoding('utf8');
   if ( process.env['token'] == req.body.token ) {
+    let path_absoluto = req.body.path + req.body.nome_arquivo;
     fs.writeFile(
-        req.body.path, 
+        path_absoluto, 
         req.body.arquivo, 
         function(error) {
           if (error) {
