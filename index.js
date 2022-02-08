@@ -33,8 +33,10 @@ app.post('/upload', (req, res) => {
         req.body.arquivo, 
         (error) => {
             if (error) {
+              console.error(error);
               res.status(400).send(error);
             } else {
+              console.log('Arquivo salvo: '+path_absoluto);
               res.status(200).send('Arquivo salvo: '+path_absoluto);
             }
           }
