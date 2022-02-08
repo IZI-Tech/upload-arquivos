@@ -2,33 +2,50 @@ const express = require('express')
 const fs = require('fs');
 const app = express()
 const port = 3000
-process.env['TOKEN'] = 'ABC123456'
+const path = require('path');
+process.env['token'] = 'ABC123456'
 
 app.use(express.urlencoded({ extended: true })); 
 
 app.post('/upload', (req, res) => {
+  
+  
   req.setEncoding('utf8');
   if ( process.env['token'] == req.body.token ) {
-    let path_absoluto = req.body.path + req.body.nome_arquivo;
+    if ( !req.body.path ) {
+      res.status(400).send('Path não informado. (path)');  
+    }
+    if ( !fs.existsSync(req.body.path) ) {
+      res.status(400).send('O path informado não é válido: '+req.body.path);  
+    }
+    if ( !req.body.nome_arquivo ) {
+      res.status(400).send('Nome do arquivo não informado. (nome_arquivo)');  
+    }
+    if ( !req.body.arquivo ) {
+      res.status(400).send('Arquivo não informado. (arquivo)');  
+    }
+    
+    var obj = { dir: req.body.path, base: req.body.nome_arquivo }
+    var path_absoluto = path.format(obj);
+
     fs.writeFile(
         path_absoluto, 
         req.body.arquivo, 
-        function(error) {
-          if (error) {
-            console.log(error);
-          } else {
-            console.log("The file was saved!");
+        (error) => {
+            if (error) {
+              res.status(400).send(error);
+            } else {
+              res.status(200).send('Arquivo salvo: '+path_absoluto);
+            }
           }
-        }
-      ); 
+        ); 
   } else {
-    res.sendStatus(403);
+    res.status(403).send('Token inválido');
   }
-  res.sendStatus(200);
 })
 
 app.get('/live', function(req, res) {
-  res.send('hello world');
+  res.send('Serviço de recebimento de arquivo no ar!');
 });
 
 app.listen(port, () => {
