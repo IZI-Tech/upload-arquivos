@@ -3,10 +3,12 @@ const fs = require('fs');
 const app = express()
 const port = 3000
 const path = require('path');
+const bodyParser = require('body-parser')
 process.env['token'] = 'ABC123456'
 
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 app.use(express.urlencoded({ extended: true })); 
-
 app.post('/upload', (req, res) => {
   
   
@@ -47,7 +49,7 @@ app.post('/upload', (req, res) => {
 })
 
 app.get('/live', function(req, res) {
-  res.send('Serviço de recebimento de arquivo no ar!');
+  res.send('Serviço de recebimento de arquivo no ar! 1.1');
 });
 
 app.listen(port, () => {
